@@ -10,6 +10,8 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from studio_manager import __version__
+from studio_manager.agent_api import router as agent_router
+from studio_manager.agent_registry import AgentRegistry
 from studio_manager.api import router as api_router
 from studio_manager.api_v1 import router as api_v1_router
 from studio_manager.backup_service import BackupService
@@ -54,6 +56,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = active
     app.state.engine = engine
     app.state.service = StudioService(engine)
+    app.state.agent_registry = AgentRegistry(engine)
     app.state.phase03a = Phase03AService(engine)
     app.state.phase03a_importer = Phase02ImportService(
         engine,
@@ -69,6 +72,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.mcp_gateway = MCPGateway(engine)
     app.include_router(api_router)
     app.include_router(api_v1_router)
+    app.include_router(agent_router)
     app.include_router(ui_router)
 
     @app.exception_handler(DomainError)

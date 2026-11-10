@@ -29,3 +29,8 @@
 - Existing Code Recovery کا source/verification gate پاس: remote source update `3e0106d`، GitHub run `42894203860` SUCCESS، 56 portable tests اور 89% application coverage۔ یہ باقی modules کے بننے کی تصدیق نہیں۔
 - Agent & Skills Engine یا باقی creative modules اس task میں implement نہیں کیے گئے۔
 - موجودہ software status: root `PROJECT_STATUS_UR.md`؛ historical dates/evidence کو نئے scope سے overwrite نہ کریں۔
+
+## Registry development branch update
+- User authorized correcting/integrating the two identical-source registry ZIPs and opening a development PR after tests. See `PHASE03B_AGENT_REGISTRY_README.md`.
+- Agent & Skills **Registry** is integrated and hardened on the dev branch; full Agent Runner remains out of scope. No production DB/approved assets/Blender files changed and no automatic PR merge.
+- After this foundation is reviewed: Story Creator, Story Critic and Story Archive contracts should reference exact registry snapshots. They are not implemented here.

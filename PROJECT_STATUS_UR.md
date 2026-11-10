@@ -247,3 +247,12 @@ uv run --frozen python scripts/run_local.py
 3. منظورشدہ کم سے کم pilot assets، final mesh/rig/contact tests اور حقیقی asset registry registration۔
 4. بعد کی الگ اجازت پر shot animation، rendering/edit/QC اور مکمل pilot۔
 5. Visual workflow editor اور اگلا application phase صرف الگ منظورشدہ scope کے تحت؛ انہیں بن چکا نہ سمجھیں۔
+
+## Phase 03-B development update — Registry integration (not deployed)
+- User supplied two archives; their five source/doc files are identical. Integrated and corrected once on `feat/phase03b-agent-registry`, based on the public main history. Original ZIPs and production source working tree preserved.
+- Inert Agent/Skills registry now wired into this branch's app: migration0005, typed models/contracts, authenticated paginated APIs, exact studio skill-version references and separate read-only legacy skill view.
+- Corrected duplicate/concurrent writes, truthful/redacted audits, bounded JSON/schema declarations, no private-input echo in validation errors and immutable version snapshots. Defaults remain disabled/DRAFT; no approve/activate/run endpoint or model/tool invocation.
+- JSON Schema declaration validation adds `jsonschema==4.26.0` plus locked dependencies attrs26.1.0, jsonschema-specifications2025.9.1, referencing0.37.0 and rpds-py2026.9.1. Only isolated development environment updated; pyproject.toml/uv.lock track the additions.
+- Test/copy database head0005 has35 tables. Actual production database is intentionally still0004/31tables. All30 prior data/evidence table fingerprints survived0004->0005->0004->0005 on a disposable copy, and original DB hash remained unchanged.
+- Full local suite87 tests; registry tests include auth, input/permission spoof rejection, versioning/concurrency, immutable snapshots, schema limits and no-execution checks. CI result belongs to this development branch/PR, not a claim of production deployment.
+- Implementation details and commands: `docs/PHASE03B_AGENT_REGISTRY_README.md`. Story Creator/Critic/Archive and other autonomous modules remain subsequent work. This registry has API endpoints only; no new registry GUI or autonomous runner is claimed.

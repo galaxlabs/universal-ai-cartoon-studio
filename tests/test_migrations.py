@@ -21,14 +21,14 @@ def test_upgrade_downgrade_and_reupgrade(database_path: Path) -> None:
     assert "projects" in upgraded
     assert "production_jobs" in upgraded
     assert "alembic_version" in upgraded
-    assert len(upgraded) == 31
+    assert len(upgraded) == 35
     assert {"character_variants", "import_batches", "import_records", "users", "app_settings"} <= upgraded
 
     downgrade_database(database_path)
     assert user_tables(database_path) == {"alembic_version"}
 
     upgrade_database(database_path)
-    assert len(user_tables(database_path)) == 31
+    assert len(user_tables(database_path)) == 35
 
 
 def test_phase03a_forward_migration_preserves_phase02_evidence(database_path: Path) -> None:
@@ -47,7 +47,7 @@ def test_phase03a_forward_migration_preserves_phase02_evidence(database_path: Pa
     finally:
         connection.close()
 
-    upgrade_database(database_path)
+    upgrade_database(database_path, "0004_phase03a_foundation")
     connection = sqlite3.connect(database_path)
     try:
         assert connection.execute("SELECT decision FROM approvals WHERE id='apr_preserved'").fetchone()[0] == "APPROVED"
@@ -63,5 +63,5 @@ def test_phase03a_forward_migration_preserves_phase02_evidence(database_path: Pa
     finally:
         connection.close()
 
-    upgrade_database(database_path)
+    upgrade_database(database_path, "0004_phase03a_foundation")
     assert len(user_tables(database_path)) == 31

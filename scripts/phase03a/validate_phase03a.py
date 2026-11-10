@@ -74,8 +74,10 @@ def main() -> int:
     }
     checks = {
         "database_integrity": integrity == "ok",
-        "migration_head": revision == "0004_phase03a_foundation",
-        "required_tables": required_tables <= tables and len(tables) == 31,
+        "migration_head": revision in {"0004_phase03a_foundation", "0005_agent_skills_registry"},
+        "required_tables": required_tables <= tables and len(tables) == {
+            "0004_phase03a_foundation": 31, "0005_agent_skills_registry": 35,
+        }.get(revision),
         "required_triggers": required_triggers <= triggers,
         "phase02_skills_imported_disabled": counts["skills"] == 14 and enabled_skills == 0,
         "phase02_reports_imported": counts["validation_reports"] == 4,
