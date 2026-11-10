@@ -11,6 +11,13 @@ from studio_manager.config import Settings
 from studio_manager.main import create_app
 
 
+def pytest_configure() -> None:
+    # Git does not preserve empty managed directories in a clean checkout.
+    # Pytest creates its basetemp itself, but requires the parent to exist.
+    project_root = Path(__file__).resolve().parents[1]
+    (project_root / "storage" / "20_TEMP").mkdir(parents=True, exist_ok=True)
+
+
 @pytest.fixture
 def database_path(tmp_path: Path) -> Path:
     return tmp_path / "studio-test.db"

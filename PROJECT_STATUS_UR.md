@@ -133,7 +133,7 @@
 - Full user/role administration، remote access، publishing automation اور cloud render farm۔
 - Multi-episode approved asset library، مکمل original series، long-form films یا compilations۔
 - Shared Damascus/Studio asset identity integration: صرف `docs/proposals/SHARED_ASSET_IDENTITY_PROPOSAL.md` میں proposal؛ implemented نہیں۔
-- Phase 03-B approval اس launcher/dependency/GitHub درخواست سے نہیں دی گئی۔
+- صارف نے اب Phase 03-B کی تدریجی roadmap فراہم کی ہے؛ فوری کام Existing Code Recovery/publication ہے، Agent & Skills Engine یا باقی modules ابھی implement نہیں ہوئے۔ تفصیل `docs/PHASE03B_ROADMAP_UR.md` میں ہے؛ ہر module کا تفصیلی contract اور execution boundaries الگ طے ہوں گے۔
 
 ## 8. Dependencies: کیا download ہوا اور کہاں درج ہے؟
 
@@ -233,12 +233,13 @@ uv run --frozen python scripts/run_local.py
 
 **Visibility:** public — صارف کی صریح ہدایت پر GitHub visibility تبدیل اور verify کی گئی۔ Code publication اور CI کا قطعی نتیجہ متعلقہ GitHub commit/checks سے verify کریں۔ یہ فائل commit سے پہلے تیار ہوتی ہے، اس لیے اپنے commit کا self-referential hash شامل نہیں کرتی۔
 
-### Publication update — push blocked
+### Publication history and recovery
 - Local source commit **`75052f9`** بن گیا ہے؛ dependency/setup/launcher/report changes اس میں محفوظ ہیں۔
-- `git push -u origin main` GitHub نے reject کیا: موجودہ OAuth login میں **`workflow` scope نہیں**، جبکہ history میں `.github/workflows/quality.yml` موجود ہے۔
-- اس کوشش سے main branch upload کی کامیابی یا CI run کا دعویٰ نہیں۔ Repository اب Public ہے، مگر workflow authorization کے بغیر code publication ابھی نامکمل ہے۔
-- اگلا قدم: صارف کی اجازت پر GitHub browser authorization میں `workflow` scope شامل کرنا، پھر عام push دوبارہ چلانا۔ کوئی token report میں نہیں رکھا گیا؛ force-push یا authentication bypass نہیں کیا گیا۔
-- Public visibility بدلنا authentication scope کا متبادل نہیں۔ Browser authorization صرف صارف کے GitHub approval سے مکمل ہوتی ہے۔
+- پہلے pushes `workflow` scope نہ ہونے کی وجہ سے reject ہوئے؛ اب browser authorization کے بعد مطلوبہ scope موجود ہے۔
+- Safe source snapshot **`912c7f33e34bf7b295a2206e1bdb3c27f64f18f6`** کامیابی سے public remote `main` پر push ہوا اور GitHub API سے hash match کیا گیا۔ Repository اب خالی نہیں۔
+- یہ 132-file parentless public snapshot ہے؛ private local history/agent transcripts اس میں نہیں۔ بعد کی public updates اسی safe branch پر fast-forward commits ہوں گی۔
+- پہلے CI run میں frozen dependencies اور lint پاس ہوئے، مگر fresh checkout میں pytest temporary-directory parent نہ ہونے سے tests رکے۔ `tests/conftest.py` میں parent directory کی محدود bootstrap اصلاح شامل ہے؛ production DB/schema نہیں بدلی۔
+- Corrected CI کا نتیجہ متعلقہ latest GitHub Actions run سے verify کریں؛ پہلے failed run کو PASS نہ سمجھیں۔ کوئی force-push یا authentication bypass نہیں ہوا۔
 
 ترجیحی اگلے کام:
 1. نئے کمپیوٹر پر clone/setup اور UI acceptance test؛ production backups الگ verify/restore کرنا۔
