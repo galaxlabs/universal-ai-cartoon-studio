@@ -26,5 +26,6 @@
 
 ## اس publication task کی حالت
 - موجودہ foundation کا safe public source push ہو چکا ہے؛ fresh-checkout CI verification/محدود bootstrap correction اس recovery کام کا حصہ ہے۔
+- Existing Code Recovery کا source/verification gate پاس: remote source update `3e0106d`، GitHub run `42894203860` SUCCESS، 56 portable tests اور 89% application coverage۔ یہ باقی modules کے بننے کی تصدیق نہیں۔
 - Agent & Skills Engine یا باقی creative modules اس task میں implement نہیں کیے گئے۔
 - موجودہ software status: root `PROJECT_STATUS_UR.md`؛ historical dates/evidence کو نئے scope سے overwrite نہ کریں۔

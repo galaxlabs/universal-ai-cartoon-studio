@@ -214,9 +214,9 @@ uv run --frozen python scripts/run_local.py
 - Frozen lock check اور offline environment sync: **PASS**؛ installed versions میں lock mismatch نہیں۔ Direct dependencies شامل کرنے سے موجودہ installed package versions نہیں بدلے۔
 - Launcher runtime check: **PASS**؛ actual CMD startup اور live `/workspace` HTTP 200 پہلے اسی session میں verify ہوئے۔
 - Local full suite میں protected-source hash test بھی شامل تھا؛ **PASS**۔
-- Historical coverage: **89%** آخری 46-test Phase 03-A coverage run؛ 57-test run کے لیے نئی percentage ابھی measure نہیں کی گئی۔
+- تازہ GitHub clean-Windows-checkout CI میں **56 portable tests PASS، application coverage 89%**؛ local full suite میں protected-source test سمیت **57 PASS**۔ Remote test suite میں اصل protected production files شامل نہیں۔
 - GitHub CI کو fresh Windows checkout کے لیے configure کیا گیا: maintained lint، portable tests اور runtime check۔ External protected production files والی test الگ local ہے، اس لیے CI میں اسے واضح exclude کیا گیا ہے۔ Live DB/backups والی operational validation fresh runner پر PASS دکھانے کے لیے نہیں چلائی جاتی۔
-- GitHub CI کا اصل نتیجہ push کے بعد GitHub checks میں دیکھیں؛ local pass کو خودکار remote pass نہ سمجھیں۔
+- Corrected GitHub CI run **42894203860**، commit **3e0106d95c19f31fc584a577463733fa694dfd36** پر **SUCCESS**: frozen dependency restore، maintained lint، 56 tests اور launcher runtime check سب پاس۔ ثبوت: https://github.com/galaxlabs/universal-ai-cartoon-studio/actions/runs/42894203860 ۔ مستقبل کے commits کے نتائج الگ checks میں دیکھیں۔
 - V002 Blender visual/save verification ابھی نامکمل ہے؛ اس رکاوٹ کو software tests حل شدہ ثابت نہیں کرتے۔
 
 ## 11. حفاظت اور تخلیقی حدود
@@ -239,7 +239,7 @@ uv run --frozen python scripts/run_local.py
 - Safe source snapshot **`912c7f33e34bf7b295a2206e1bdb3c27f64f18f6`** کامیابی سے public remote `main` پر push ہوا اور GitHub API سے hash match کیا گیا۔ Repository اب خالی نہیں۔
 - یہ 132-file parentless public snapshot ہے؛ private local history/agent transcripts اس میں نہیں۔ بعد کی public updates اسی safe branch پر fast-forward commits ہوں گی۔
 - پہلے CI run میں frozen dependencies اور lint پاس ہوئے، مگر fresh checkout میں pytest temporary-directory parent نہ ہونے سے tests رکے۔ `tests/conftest.py` میں parent directory کی محدود bootstrap اصلاح شامل ہے؛ production DB/schema نہیں بدلی۔
-- Corrected CI کا نتیجہ متعلقہ latest GitHub Actions run سے verify کریں؛ پہلے failed run کو PASS نہ سمجھیں۔ کوئی force-push یا authentication bypass نہیں ہوا۔
+- Corrected source update **3e0106d** بھی remote main پر verify ہوا؛ GitHub run **42894203860** کامیاب ہے (56 tests، 89% coverage، lint/runtime check)۔ پہلا failed run تاریخی طور پر برقرار ہے؛ اسے PASS نہیں کہا گیا۔ کوئی force-push یا authentication bypass نہیں ہوا۔
 
 ترجیحی اگلے کام:
 1. نئے کمپیوٹر پر clone/setup اور UI acceptance test؛ production backups الگ verify/restore کرنا۔
