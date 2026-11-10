@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-30T22:45:00+05:00",
+  "phase": "PHASE_01_DISCOVERY",
+  "discovery_method": "read-only OS, filesystem, executable and GitHub API queries",
+  "machine": {
+    "os": "Microsoft Windows 10 Pro",
+    "os_build": "19045",
+    "model": "Lenovo 20HKCTO1WW",
+    "cpu": "Intel(R) Xeon(R) CPU E3-1505M v6 @ 3.00GHz",
+    "cores": 4,
+    "logical_processors": 8,
+    "ram_gb": 15.57,
+    "gpu": [
+      {
+        "name": "NVIDIA Quadro P3000",
+        "vram_mib": 6144,
+        "driver": "573.22",
+        "compute_capability": "6.1"
+      },
+      {
+        "name": "Intel(R) HD Graphics P630",
+        "vram_mib": null
+      }
+    ]
+  },
+  "storage_gb": {
+    "C": { "free": 76.91, "total": 271.51 },
+    "D": { "free": 110.0, "total": 112.3 },
+    "E": { "free": 27.43, "total": 112.3 },
+    "F": { "free": 107.11, "total": 112.3 },
+    "G": { "free": 70.04, "total": 112.3 },
+    "H": { "free": 107.19, "total": 112.3 },
+    "I": { "free": 63.74, "total": 97.91 }
+  },
+  "python": {
+    "system": { "version": "3.14.4", "path": "C:\\Python314\\python.exe", "role": "utility/discovery only" },
+    "application": {
+      "version": "3.13.13",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.python\\cpython-3.13.13-windows-x86_64-none\\python.exe",
+      "managed_by": "uv",
+      "role": "studio application runtime"
+    },
+    "blender_embedded": { "version": "3.13.13", "role": "Blender only" },
+    "unreal_embedded": { "version": "3.11.x", "role": "Unreal editor only" }
+  },
+  "toolchain": {
+    "git": { "present": true, "version": "2.54.0.windows.1" },
+    "git_lfs": { "present": true, "version": "3.7.1" },
+    "node": { "present": true, "version": "24.16.0" },
+    "npm": { "present": true, "version": "11.13.0" },
+    "corepack_shims": { "present": true, "note": "pnpm/yarn shims exist; versions unverified and not invoked" },
+    "uv": { "present": true, "version": "0.11.8" },
+    "ffmpeg": { "present": true, "version": "8.1.1" },
+    "c_compiler": { "present": false, "note": "cl/clang/gcc absent from PATH" },
+    "cmake_ninja_msbuild": { "present": false },
+    "visual_studio_components": { "present": false, "note": "VS2022 folder exists but empty; vswhere reports no instances" },
+    "windows_sdk_headers": { "present": false, "note": "Windows Kits\\10\\Include missing" }
+  },
+  "three_d": {
+    "blender": {
+      "path": "C:\\Program Files\\Blender Foundation\\Blender 5.2\\blender.exe",
+      "version": "5.2.2 LTS",
+      "build_date": "2026-09-15",
+      "build_hash": "d13f752e3b9c",
+      "user_addons": ["blender_mcp.py"],
+      "extensions": [],
+      "startup_scripts": [],
+      "config_files": ["userpref.blend", "bookmarks.txt", "platform_support.txt", "recent-files.txt", "recent-searches.txt", "topview_blender/"]
+    },
+    "unreal": {
+      "path": "C:\\Program Files\\Epic Games\\UE_5.8",
+      "version": "5.8.4",
+      "changelist": 58902052,
+      "compatible_changelist": 55116800,
+      "branch": "++UE5+Release-5.8",
+      "embedded_python": "3.11.x (Win64)",
+      "plugins_verified": [
+        "Experimental/PythonScriptPlugin",
+        "Editor/EditorScriptingUtilities",
+        "MovieScene/SequencerScripting",
+        "Animation/ControlRig",
+        "Interchange/Runtime"
+      ]
+    }
+  },
+  "workspace": {
+    "canonical_root": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio",
+    "compatibility_junction": "E:\\Projects\\universal-ai-cartoon-studio",
+    "protected_root": "D:\\Projects\\01_3D_Blender\\Blender Project",
+    "database": "storage/30_DATABASES/studio.db",
+    "storage_zones": [
+      "00_PROTECTED_SOURCES",
+      "10_DEVELOPMENT",
+      "20_TEMP",
+      "30_VALIDATED",
+      "40_APPROVED_MASTERS",
+      "50_PUBLISHED_OUTPUTS",
+      "60_BACKUPS",
+      "70_LOGS",
+      "80_REPORTS",
+      "90_QUARANTINE"
+    ],
+    "known_layout_overlap": "storage/30_VALIDATED and storage/30_DATABASES share the 30_ prefix; cleanup deferred to an approved change"
+  },
+  "services": {
+    "bind_host": "127.0.0.1",
+    "port": 8765,
+    "public_bind_allowed": false,
+    "current_listener": "127.0.0.1:8765 (Studio app, loopback only)",
+    "firewall_profiles_enabled": ["Domain", "Private", "Public"],
+    "firewall_defaults": "NotConfigured (OS defaults apply)"
+  },
+  "mcp_configured": {
+    "cursor": ["blender"],
+    "vscode": ["blender", "github-mcp-server", "next-devtools-mcp"],
+    "codex": ["blender", "node_repl", "solo"],
+    "opencode": ["codegraph"],
+    "claude_desktop": [],
+    "note": "server names only; no credentials or environment values read"
+  },
+  "installed_this_phase": [],
+  "policy": {
+    "allow_public_bind": false,
+    "allow_in_place_protected_writes": false,
+    "allow_unapproved_promotion": false,
+    "allow_unreviewed_arbitrary_code": false
+  },
+  "verification": {
+    "phase0_health_check": "PASS",
+    "protected_hashes_match": true,
+    "workspace_conflict": false
+  }
+}

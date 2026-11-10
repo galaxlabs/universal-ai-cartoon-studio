@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "policy": "READ_ONLY_NO_MODIFICATION_WITHOUT_EXPLICIT_APPROVAL",
+  "sources": [
+    {
+      "id": "PROTECTED_BLENDER_PROJECT_ROOT",
+      "path": "D:\\Projects\\01_3D_Blender\\Blender Project",
+      "type": "directory",
+      "allowed_operations": ["inventory", "hash", "read_only_scene_inspection"]
+    },
+    {
+      "id": "DS630_S03_V004",
+      "path": "D:\\Projects\\01_3D_Blender\\Blender Project\\TILISM_ENGINE\\SPRINT_03_PHOTOREAL_CINEMATIC\\BLENDER\\DS630_BAB_SHARQI_PHOTOREAL_V004.blend",
+      "sha256": "e507cb35e2c303291d509c71e667ce5c8258c7125de09c5d88c7a629c86f1394",
+      "type": "blend"
+    },
+    {
+      "id": "DS630_S03_APPROVAL_V006",
+      "path": "D:\\Projects\\01_3D_Blender\\Blender Project\\TILISM_ENGINE\\SPRINT_03_PHOTOREALISM_UPGRADE_V01\\BLENDER\\DS630_S03_PHOTOREALISM_UPGRADE_V006_APPROVAL.blend",
+      "sha256": "dc01cf56dd9687158a57c537fa1ff43605dfcaf271182e390d22970ff969fc5d",
+      "type": "blend"
+    },
+    {
+      "id": "WORLD_ATLAS_V10",
+      "path": "D:\\Projects\\01_3D_Blender\\Blender Project\\build_world_atlas_v10\\build_world_atlas_v10.blend",
+      "sha256": "8a25871c13bf8b626ad2f0e66f4454cb0ee90839b351fce6159dd2937fbd00af",
+      "type": "blend"
+    }
+  ]
+}

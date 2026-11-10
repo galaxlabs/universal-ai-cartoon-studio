@@ -1,0 +1,67 @@
+<div class="stats" aria-label="Registry totals">
+  <div><strong>{{ snapshot.projects|length }}</strong><span>Projects</span></div>
+  <div><strong>{{ snapshot.assets|length }}</strong><span>Assets</span></div>
+  <div><strong>{{ snapshot.production_jobs|length }}</strong><span>Jobs</span></div>
+  <div><strong>{{ snapshot.approvals|length }}</strong><span>Approvals</span></div>
+</div>
+
+<div class="registry-grid">
+  <section>
+    <h2>Catalog</h2>
+    <form hx-post="/ui/projects" hx-target="#workspace-content" hx-swap="innerHTML">
+      <label>Project name<input name="name" required maxlength="160"></label>
+      <button type="submit">Create project</button>
+    </form>
+    <ul class="records">
+      {% for item in snapshot.projects %}<li><span>{{ item.name }}</span><code>{{ item.status }}</code></li>{% else %}<li class="empty">No projects yet.</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Assets</h2>
+    <form hx-post="/ui/assets" hx-target="#workspace-content" hx-swap="innerHTML">
+      <label>Project<select name="project_id" required>{% for item in snapshot.projects %}<option value="{{ item.id }}">{{ item.name }}</option>{% endfor %}</select></label>
+      <label>Code<input name="code" required pattern="[A-Za-z0-9_\-]+"></label>
+      <label>Name<input name="name" required></label>
+      <label>Type<select name="asset_type"><option>CHARACTER</option><option>ENVIRONMENT</option><option>PROP</option><option>MATERIAL</option><option>RIG</option><option>ANIMATION</option><option>AUDIO</option><option>OTHER</option></select></label>
+      <button type="submit" {% if not snapshot.projects %}disabled{% endif %}>Register asset</button>
+    </form>
+    <ul class="records">
+      {% for item in snapshot.assets %}<li><span>{{ item.code }} · {{ item.name }}</span><code>{{ item.lifecycle_state }}</code></li>{% else %}<li class="empty">No assets yet.</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Jobs</h2>
+    <form hx-post="/ui/jobs" hx-target="#workspace-content" hx-swap="innerHTML">
+      <label>Project<select name="project_id" required>{% for item in snapshot.projects %}<option value="{{ item.id }}">{{ item.name }}</option>{% endfor %}</select></label>
+      <label>Job type<input name="job_type" value="FOUNDATION_REVIEW" required pattern="[A-Za-z0-9_\-]+"></label>
+      <label>Managed workspace<input name="workspace_path" value="{{ default_workspace }}" required></label>
+      <button type="submit" {% if not snapshot.projects %}disabled{% endif %}>Draft job</button>
+    </form>
+    <ul class="records">
+      {% for item in snapshot.production_jobs %}
+      <li class="job-record">
+        <span>{{ item.job_type }}</span><code>{{ item.status }}</code>
+        <form hx-post="/ui/jobs/{{ item.id }}/transitions" hx-target="#workspace-content" hx-swap="innerHTML">
+          <select name="target_status"><option>QUEUED</option><option>RUNNING</option><option>VALIDATING</option><option>PENDING_APPROVAL</option><option>FAILED</option><option>BLOCKED</option><option>CANCELLED</option><option>ROLLED_BACK</option><option>PUBLISHED</option></select>
+          <button type="submit">Transition</button>
+        </form>
+      </li>
+      {% else %}<li class="empty">No jobs yet.</li>{% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h2>Approvals</h2>
+    <form hx-post="/ui/approvals" hx-target="#workspace-content" hx-swap="innerHTML">
+      <label>Pending job<select name="subject_id" required>{% for item in snapshot.production_jobs if item.status == 'PENDING_APPROVAL' %}<option value="{{ item.id }}">{{ item.job_type }} · {{ item.id }}</option>{% endfor %}</select></label>
+      <label>Decision<select name="decision"><option>APPROVED</option><option>REJECTED</option><option>CHANGES_REQUESTED</option></select></label>
+      <label>Notes<textarea name="notes" maxlength="4000"></textarea></label>
+      <button type="submit">Record decision</button>
+    </form>
+    <ul class="records">
+      {% for item in snapshot.approvals %}<li><span>{{ item.subject_kind }} · {{ item.decision }}</span><code>{{ item.decided_by }}</code></li>{% else %}<li class="empty">No decisions yet.</li>{% endfor %}
+    </ul>
+  </section>
+</div>

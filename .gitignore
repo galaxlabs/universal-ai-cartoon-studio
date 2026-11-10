@@ -1,0 +1,39 @@
+.venv/
+.venv-windows/
+.agent-tmp/
+# Local agent memory is not part of new application commits.
+ref/
+.env
+.env.*
+!.env.example
+.python/
+.uv-cache/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.py[cod]
+storage/20_TEMP/*
+storage/30_DATABASES/*.db*
+storage/60_BACKUPS/*
+!storage/**/.gitkeep
+
+# Large binary production files stay in managed storage, not in git
+*.blend
+*.blend1
+*.glb
+*.fbx
+*.uasset
+*.umap
+*.mp4
+*.mov
+storage/10_DEVELOPMENT/integrations/sources/
+storage/10_DEVELOPMENT/integrations/blender/
+storage/50_PUBLISHED_OUTPUTS/
+storage/40_APPROVED_MASTERS/
+storage/60_BACKUPS/
+# Generated, cached or heavy managed zones (not source)
+storage/10_DEVELOPMENT/
+storage/20_TEMP/
+.codegraph/

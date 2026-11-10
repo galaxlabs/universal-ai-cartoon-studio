@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "phase": "PHASE_02_WORKER_AND_MCP_MANAGER",
+  "components": [
+    {
+      "name": "Blender",
+      "source": "https://www.blender.org/",
+      "license": "GPL",
+      "version": "5.2.2 LTS",
+      "status": "INSTALLED_EXISTING_SELECTED",
+      "compatibility": "Native CLI verified; MCP compatibility requires isolated tests",
+      "permissions": ["read scene", "write isolated scene", "render", "import/export"],
+      "test_result": "Background factory-startup discovery PASS",
+      "risk": "User profile contains an enabled external Blender MCP addon"
+    },
+    {
+      "name": "Unreal Engine",
+      "source": "Epic Games Launcher",
+      "license": "Epic Unreal Engine EULA",
+      "version": "5.8.4 changelist 58902052",
+      "status": "INSTALLED_EXISTING_SELECTED_PENDING_ISOLATED_PROJECT",
+      "compatibility": "Python 3.11.8 editor-only; Python/Editor/Sequencer plugins are beta or experimental",
+      "permissions": ["isolated project assets", "Sequencer", "render", "Interchange import"],
+      "test_result": "Executable and build manifest discovered; editor not modified or launched",
+      "risk": "Large application footprint; experimental Python requires guarded tests"
+    },
+    {
+      "name": "Python application runtime",
+      "source": "https://www.python.org/",
+      "license": "PSF",
+      "version": "3.13.13",
+      "status": "INSTALLED_PROJECT_LOCAL_SELECTED",
+      "compatibility": "uv-managed CPython is isolated under the Studio project on D: and is not shared with Blender or Unreal",
+      "permissions": ["project-local virtual environment"],
+      "test_result": "Runtime location, version, locked sync, lint and 7 application tests PASS",
+      "risk": "Do not reuse Blender or Unreal embedded Python for the web application"
+    },
+    {
+      "name": "uv",
+      "source": "https://github.com/astral-sh/uv",
+      "license": "Apache-2.0 OR MIT",
+      "version": "0.11.8",
+      "status": "INSTALLED_EXISTING_SELECTED",
+      "compatibility": "Can manage isolated Python runtime and locked dependencies",
+      "permissions": ["project virtual environment", "package cache"],
+      "test_result": "Version discovery PASS",
+      "risk": "Network/package downloads require explicit Phase 1 action"
+    },
+    {
+      "name": "SQLite via Python stdlib",
+      "source": "https://docs.python.org/3/library/sqlite3.html",
+      "license": "Python/SQLite upstream terms",
+      "version": "runtime discovered by health check",
+      "status": "INSTALLED_EXISTING_SELECTED",
+      "compatibility": "Appropriate for local single-user initial workload",
+      "permissions": ["project database files only"],
+      "test_result": "WAL, foreign keys, FULL synchronous mode, timeout, backup/restore and migration rollback PASS",
+      "risk": "Serialize write jobs; enable foreign keys and WAL"
+    },
+    {
+      "name": "FastAPI",
+      "source": "https://github.com/fastapi/fastapi",
+      "license": "MIT",
+      "version": "0.162.0",
+      "status": "INSTALLED_LOCKED_SELECTED",
+      "compatibility": "Python 3.13 and local TestClient suite PASS",
+      "permissions": ["loopback HTTP only"],
+      "test_result": "Loopback health, trusted-host and security-header tests PASS",
+      "risk": "Install without cloud CLI extras"
+    },
+    {
+      "name": "SQLAlchemy",
+      "source": "https://github.com/sqlalchemy/sqlalchemy",
+      "license": "MIT",
+      "version": "2.1.6",
+      "status": "INSTALLED_LOCKED_SELECTED",
+      "compatibility": "Python 3.13 and SQLite runtime tests PASS",
+      "permissions": ["studio SQLite database"],
+      "test_result": "Connection PRAGMA and migration integration tests PASS",
+      "risk": "Use explicit transactions and one writer policy"
+    },
+    {
+      "name": "Alembic",
+      "source": "https://github.com/sqlalchemy/alembic",
+      "license": "MIT",
+      "version": "1.20.1",
+      "status": "INSTALLED_LOCKED_SELECTED",
+      "compatibility": "Official SQLite batch migration support documented",
+      "permissions": ["versioned studio database migrations"],
+      "test_result": "Upgrade, downgrade and re-upgrade test PASS",
+      "risk": "Every migration requires backup and downgrade test"
+    },
+    {
+      "name": "Uvicorn",
+      "source": "https://github.com/Kludex/uvicorn",
+      "license": "BSD-3-Clause",
+      "version": "0.54.0",
+      "status": "INSTALLED_LOCKED_SELECTED",
+      "compatibility": "Python 3.13 local server smoke test PASS",
+      "permissions": ["bind 127.0.0.1:8765 only"],
+      "test_result": "Real process health request PASS; process stopped and no listener remained",
+      "risk": "Public bind is blocked by immutable application settings"
+    },
+    {
+      "name": "Jinja",
+      "source": "https://github.com/pallets/jinja",
+      "license": "BSD-3-Clause",
+      "version": "3.1.6",
+      "status": "INSTALLED_LOCKED_SELECTED",
+      "compatibility": "FastAPI template rendering test PASS",
+      "permissions": ["render local templates"],
+      "test_result": "Dashboard and security-header test PASS",
+      "risk": "Autoescape remains enabled for HTML templates"
+    },
+    {
+      "name": "Phase 1A test toolchain",
+      "source": "PyPI projects: pytest, pytest-cov, httpx2 and Ruff",
+      "license": "MIT/BSD-3-Clause",
+      "version": "pytest 9.2.0; pytest-cov 7.1.0; httpx2 2.16.0; Ruff 0.17.3",
+      "status": "INSTALLED_LOCKED_DEVELOPMENT_ONLY",
+      "compatibility": "Python 3.13 suite PASS with warnings treated as errors",
+      "permissions": ["project tests", "project lint", "loopback in-process ASGI calls"],
+      "test_result": "30 tests PASS, 90% total coverage including Phase 02, Ruff PASS",
+      "risk": "Development-only dependencies are locked and not runtime services"
+    },
+    {
+      "name": "HTMX",
+      "source": "https://github.com/bigskysoftware/htmx",
+      "license": "0BSD",
+      "version": "2.0.11",
+      "status": "VENDORED_LOCAL_VERIFIED",
+      "compatibility": "Pinned upstream commit fa978b24; SHA-256 verified; served from static/vendor/",
+      "permissions": ["browser UI to loopback application"],
+      "test_result": "Real server smoke test PASS (200, 52182 bytes); hash match PASS",
+      "risk": "No CDN dependency; 0BSD permissive license"
+    },
+    {
+      "name": "Studio durable worker",
+      "source": "project-local Python",
+      "license": "project source",
+      "version": "Phase 02 v1",
+      "status": "IMPLEMENTED_SELECTED",
+      "compatibility": "Single SQLite writer; fixed allow-listed subprocess adapters",
+      "permissions": ["claim queued jobs", "managed workspace only", "append job evidence"],
+      "test_result": "Unit suite and real CLI smoke test reached PENDING_APPROVAL",
+      "risk": "No Blender or Unreal adapter is allow-listed; unknown job types are blocked"
+    },
+    {
+      "name": "Studio MCP registry and policy manager",
+      "source": "project-local Python",
+      "license": "project source",
+      "version": "Phase 02 v1",
+      "status": "IMPLEMENTED_REGISTRY_ONLY",
+      "compatibility": "Loopback registration and activation preview; activation not exposed",
+      "permissions": ["register disabled metadata", "list", "policy preview"],
+      "test_result": "Loopback, duplicate-name, HTTPS-source, execute_code denial and disabled-state tests PASS",
+      "risk": "No MCP server is installed, started, contacted or enabled by this component"
+    },
+    {
+      "name": "ahujasid/mcp-for-blender addon",
+      "source": "https://github.com/ahujasid/mcp-for-blender",
+      "license": "MIT",
+      "version": "addon 1.8 protocol 13",
+      "status": "INSTALLED_EXISTING_NOT_STUDIO_APPROVED",
+      "compatibility": "Loaded by Blender 5.2 user profile; active upstream maintenance verified",
+      "permissions": ["localhost socket", "arbitrary Blender Python", "optional remote asset APIs"],
+      "test_result": "Discovery only; no integration write test",
+      "risk": "Broad execute_code and network integrations; conflicts with second Blender MCP"
+    },
+    {
+      "name": "kleer001/blender-mcp",
+      "source": "https://github.com/kleer001/blender-mcp",
+      "license": "MIT",
+      "version": "0.1.0 commit 12feeb50b49cd5e8a3152b5f9ea71fb3b4558b1d",
+      "status": "LOCAL_REPO_CANDIDATE_PENDING_TEST",
+      "compatibility": "Claims Blender 4.0+; integration-tested upstream on 4.2.5, not local 5.2.2",
+      "permissions": ["localhost:9334", "175 typed tools", "execute_python", "evaluate_expression"],
+      "test_result": "Repository, commit, docs and license verified; local unit/integration tests pending",
+      "risk": "Small/new project and arbitrary code tools; must not run alongside current addon"
+    },
+    {
+      "name": "Unreal Python and editor scripting plugins",
+      "source": "Bundled with Unreal Engine 5.8",
+      "license": "Epic Unreal Engine EULA",
+      "version": "UE 5.8 bundled",
+      "status": "INSTALLED_DISABLED_BY_DEFAULT_PENDING_PROJECT_APPROVAL",
+      "compatibility": "Python and Editor Scripting Utilities are beta/experimental; Sequencer depends on Python",
+      "permissions": ["Unreal editor assets", "Sequencer", "commandlet"],
+      "test_result": "Plugin descriptors and official UE 5.8 docs verified",
+      "risk": "Enable only in isolated studio test project"
+    },
+    {
+      "name": "Quixel Bridge and Fab UE plugins",
+      "source": "Epic Games Launcher",
+      "license": "Epic/Fab content terms",
+      "version": "UE 5.8 bundles",
+      "status": "INSTALLED_EXISTING_NOT_SELECTED_FOR_CORE",
+      "compatibility": "Available in engine installation",
+      "permissions": ["network content discovery/download"],
+      "test_result": "Launcher manifests discovered",
+      "risk": "External-service, licensing and provenance review required per asset"
+    },
+    {
+      "name": "Redis/Celery/PostgreSQL",
+      "source": "not inspected for installation",
+      "license": "varies",
+      "version": null,
+      "status": "REJECTED_FOR_INITIAL_ARCHITECTURE",
+      "compatibility": "Unnecessary for current single-user local workload",
+      "permissions": [],
+      "test_result": "Not installed or changed by this phase",
+      "risk": "Adds services, memory use and operational complexity without measured need"
+    }
+  ],
+  "unexpected_changes": [
+    {
+      "action": "pnpm --version invoked Corepack and downloaded pnpm 12.16.1 into the existing Corepack cache",
+      "privileged": false,
+      "project_files_changed": false,
+      "follow_up": "Recorded; pnpm is not selected for Phase 1 and no project Node setup was created"
+    }
+  ]
+}

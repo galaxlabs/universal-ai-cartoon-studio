@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Universal AI Cartoon Studio</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/studio.css') }}">
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">LOCAL FOUNDATION · PHASE 1A</p>
+      <h1>Universal AI Cartoon Studio</h1>
+      <p class="lede">Approval-gated production orchestration for Blender and Unreal.</p>
+      <section aria-labelledby="health-title">
+        <h2 id="health-title">Foundation health</h2>
+        <dl>
+          <div><dt>Application</dt><dd class="pass">Ready</dd></div>
+          <div><dt>Database</dt><dd class="pass">{{ 'Ready' if health.ok else 'Degraded' }}</dd></div>
+          <div><dt>SQLite journal</dt><dd>{{ health.pragmas.journal_mode | upper }}</dd></div>
+          <div><dt>Schema tables</dt><dd>{{ health.tables }}</dd></div>
+          <div><dt>Version</dt><dd>{{ version }}</dd></div>
+        </dl>
+      </section>
+      <p class="boundary">Blender, Unreal, MCP and production asset writes are disabled in this phase.</p>
+      <p><a class="button" href="/workspace">Open production registry</a></p>
+    </main>
+  </body>
+</html>

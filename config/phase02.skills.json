@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-30T23:45:18.599484+05:00",
+  "install_method": "reviewed folder copy; upstream installer not executed",
+  "skills": [
+    {
+      "id": "BLENDER_CORE",
+      "name": "blender-core",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-core",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "584c9549bbed069d08574e89bd25840794a8be532754d6cd6ffce740ecd94978",
+      "files": 6,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_SCENE_SETUP",
+      "name": "blender-scene-setup",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-scene-setup",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "32e59a6f40c293818008602012592b78cb23b107ea83f9808ba4b61fab92d757",
+      "files": 3,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_PBR_MATERIALS",
+      "name": "blender-pbr-materials",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-pbr-materials",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "e6d08a10351fa4dfdd96f26aeefa669483417f85a21f935f7b9c4319534050aa",
+      "files": 4,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_LIGHTING_LOOKDEV",
+      "name": "blender-lighting-lookdev",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-lighting-lookdev",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "243776bd3e99e35ec5ca42ca0765db95d5c8d76bcd9994c49283c9d8b8435faa",
+      "files": 3,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_ANIMATION",
+      "name": "blender-animation",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-animation",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "57ee9e5423c0082379a5aada7db35a6aae051d4cf77bc6f1fc8eff52781e02b2",
+      "files": 3,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_RENDERING",
+      "name": "blender-rendering",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-rendering",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "1e7b3fb13cb8895861e31d65bda7087f179a7e807c0490bea170b33a93cf375d",
+      "files": 3,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_EXPORT_PIPELINES",
+      "name": "blender-export-pipelines",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-export-pipelines",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "c6968818d275a7e270ac9bf3f7eb83eeefac3fec776e03fb1a3f3b600d407864",
+      "files": 7,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "BLENDER_ASSET_QA",
+      "name": "blender-asset-qa",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\blender-asset-qa",
+      "source": "https://github.com/EL4CTEO/blender-skills",
+      "version": "71d031dab8bc6729504d11a78cbe91945401045f",
+      "license": "MIT",
+      "sha256_tree": "0308b4324934187340914218ba26eb6c8accf342863f85644a3fcb807d2a98c5",
+      "files": 4,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_001_MANAGED_BLENDER_SCENE",
+      "name": "sk-001-managed-blender-scene",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-001-managed-blender-scene",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "3a252ef1737255ddf570751e8e2a956fd4cf0f496907cceede5e684a2dfc2532",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_002_BLENDER_QUALITY_GATE",
+      "name": "sk-002-blender-quality-gate",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-002-blender-quality-gate",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "6e3d855020e40e429af2ab2f83361a3a69c1d5da1f03f26605bbdbe27db8a87a",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_003_BLENDER_UNREAL_EXPORT",
+      "name": "sk-003-blender-unreal-export",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-003-blender-unreal-export",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "639957cf3f4f90dc8ac1f7b5ede28c86bdc925399efbc61227179fce42a59cc3",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_004_MANAGED_UNREAL_IMPORT",
+      "name": "sk-004-managed-unreal-import",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-004-managed-unreal-import",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "5d67e7ea23d27bb86803960e9e71ad6edcea24a33aa497e3e2f6ed64baa2a99a",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_005_UNREAL_CINEMATIC_TEST",
+      "name": "sk-005-unreal-cinematic-test",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-005-unreal-cinematic-test",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "fee3baa98e854092b628293ef425916ad3fc2fde8b69605786028d71b7d49dd2",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    },
+    {
+      "id": "SK_006_INTEGRATION_RECOVERY",
+      "name": "sk-006-integration-recovery",
+      "path": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio\\.agents\\skills\\sk-006-integration-recovery",
+      "source": "studio-owned",
+      "version": "1.0.0",
+      "license": "project source",
+      "sha256_tree": "a16e28888cbe39958e689a8af4570a084fd98a427893fc39bae92a5c5fff9eee",
+      "files": 1,
+      "status": "INSTALLED_PROJECT_LOCAL_DISABLED_BY_DEFAULT"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "project_root": "D:\\Projects\\06_Studio_Systems\\Universal_AI_Cartoon_Studio",
+  "bind_host": "127.0.0.1",
+  "storage": {
+    "protected_registry": "storage/00_PROTECTED_SOURCES",
+    "development": "storage/10_DEVELOPMENT",
+    "temporary": "storage/20_TEMP",
+    "validated": "storage/30_VALIDATED",
+    "approved_masters": "storage/40_APPROVED_MASTERS",
+    "published_outputs": "storage/50_PUBLISHED_OUTPUTS",
+    "backups": "storage/60_BACKUPS",
+    "logs": "storage/70_LOGS",
+    "reports": "storage/80_REPORTS",
+    "quarantine": "storage/90_QUARANTINE"
+  },
+  "protected_roots": [
+    "D:\\Projects\\01_3D_Blender\\Blender Project"
+  ],
+  "policy": {
+    "allow_public_bind": false,
+    "allow_in_place_protected_writes": false,
+    "allow_unapproved_promotion": false,
+    "allow_unreviewed_arbitrary_code": false
+  }
+}
