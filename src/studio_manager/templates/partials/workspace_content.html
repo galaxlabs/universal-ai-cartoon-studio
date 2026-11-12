@@ -54,7 +54,9 @@
 
   <section>
     <h2>Approvals</h2>
-    <form hx-post="/ui/approvals" hx-target="#workspace-content" hx-swap="innerHTML">
+    <form method="post" action="/ui/approvals" hx-post="/ui/approvals" hx-target="#workspace-content" hx-swap="innerHTML">
+      <label>Local approval token<input type="password" name="approval_token" required autocomplete="off"></label>
+      <small>Enter the local bearer token shown in the Studio console. It is not stored with the decision.</small>
       <label>Pending job<select name="subject_id" required>{% for item in snapshot.production_jobs if item.status == 'PENDING_APPROVAL' %}<option value="{{ item.id }}">{{ item.job_type }} · {{ item.id }}</option>{% endfor %}</select></label>
       <label>Decision<select name="decision"><option>APPROVED</option><option>REJECTED</option><option>CHANGES_REQUESTED</option></select></label>
       <label>Notes<textarea name="notes" maxlength="4000"></textarea></label>

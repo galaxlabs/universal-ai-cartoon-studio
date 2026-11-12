@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+from studio_manager.auth import require_ui_approval_actor
 from studio_manager.config import PROJECT_ROOT
 from studio_manager.contracts import ApprovalCreate, AssetCreate, JobCreate, JobTransition, ProjectCreate
 from studio_manager.service import StudioService
@@ -19,6 +20,7 @@ def service(request: Request) -> StudioService:
 
 
 StudioDep = Annotated[StudioService, Depends(service)]
+ApprovalActor = Annotated[str, Depends(require_ui_approval_actor)]
 
 
 def context(request: Request, studio: StudioService) -> dict[str, object]:
@@ -110,6 +112,7 @@ def create_approval(
     subject_id: Annotated[str, Form()],
     decision: Annotated[str, Form()],
     studio: StudioDep,
+    actor: ApprovalActor,
     notes: Annotated[str | None, Form()] = None,
 ) -> HTMLResponse:
     studio.create_approval(
@@ -117,7 +120,7 @@ def create_approval(
             subject_kind="JOB",
             subject_id=subject_id,
             decision=decision,  # type: ignore[arg-type]
-            decided_by="creative-director",
+            decided_by=actor,
             notes=notes,
         )
     )

@@ -60,7 +60,7 @@ def set_policy(client: TestClient, server_id: str, workspace: Path, **overrides)
 def approve(client: TestClient, server_id: str, operation: str) -> str:
     response = client.post(
         "/api/approvals",
-        headers=HEADERS,
+        headers={**HEADERS, "Authorization": f"Bearer {client.app.state.settings.api_token}"},
         json={
             "subject_kind": "MCP_OPERATION",
             "subject_id": approval_subject(server_id, operation),
