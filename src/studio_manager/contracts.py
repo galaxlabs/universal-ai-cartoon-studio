@@ -91,6 +91,7 @@ class JobTransition(BaseModel):
     ]
     actor: ShortText
     payload: dict[str, object] = Field(default_factory=dict)
+    approval_id: Identifier | None = None
 
 
 class ApprovalCreate(BaseModel):
