@@ -21,6 +21,7 @@ from studio_manager.import_service import Phase02ImportService
 from studio_manager.mcp_gateway import MCPGateway
 from studio_manager.mcp_manager import MCPManager
 from studio_manager.phase03a_service import Phase03AService
+from studio_manager.registry_boundary import REGISTRY_MAX_BODY_BYTES, RegistryRequestBoundary
 from studio_manager.service import DomainError, StudioService
 from studio_manager.storage_service import LocalStorageService
 from studio_manager.ui import router as ui_router
@@ -48,6 +49,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url=None,
         lifespan=lifespan,
     )
+    # Existing intent/security middleware and TrustedHost stay outside this
+    # pure-ASGI boundary; it runs before FastAPI can buffer or parse a body.
+    app.add_middleware(RegistryRequestBoundary, max_body_bytes=REGISTRY_MAX_BODY_BYTES)
     allowed_hosts = [active.host, "localhost"]
     if active.test_mode:
         allowed_hosts.append("testserver")
