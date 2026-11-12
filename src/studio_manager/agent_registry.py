@@ -15,6 +15,8 @@ from studio_manager.agent_models import StudioAgent, StudioAgentVersion, StudioS
 from studio_manager.service import DomainError, StudioService, new_id, now_iso
 
 Kind = Literal["agent", "skill"]
+# Python integers are unbounded; SQLite OFFSET bindings use signed64-bit INTEGER.
+MAX_REGISTRY_OFFSET = (1 << 63) - 1
 TABLES = {
     "agent": (StudioAgent.__table__, StudioAgentVersion.__table__, "agent_id"),
     "skill": (StudioSkill.__table__, StudioSkillVersion.__table__, "skill_id"),
@@ -67,8 +69,10 @@ class AgentRegistry:
 
     @staticmethod
     def _page(limit: int, offset: int) -> None:
-        if not 1 <= limit <= 100 or offset < 0:
+        if not 1 <= limit <= 100:
             raise DomainError("invalid pagination")
+        if not isinstance(offset, int) or not 0 <= offset <= MAX_REGISTRY_OFFSET:
+            raise DomainError(f"offset must be an integer between 0 and {MAX_REGISTRY_OFFSET}", 422)
 
     def list_definitions(self, kind: Kind, limit: int = 50, offset: int = 0) -> dict:
         self._page(limit, offset)

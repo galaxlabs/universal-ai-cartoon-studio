@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
 
 from studio_manager.agent_contracts import AgentCreate, AgentVersionCreate, SkillCreate, SkillVersionCreate
-from studio_manager.agent_registry import AgentRegistry
+from studio_manager.agent_registry import MAX_REGISTRY_OFFSET, AgentRegistry
 from studio_manager.auth import require_api_token
 
 
@@ -33,7 +33,7 @@ router = APIRouter(
 )
 Principal = Annotated[str, Depends(require_api_token)]
 Limit = Annotated[int, Query(ge=1, le=100)]
-Offset = Annotated[int, Query(ge=0)]
+Offset = Annotated[int, Query(ge=0, le=MAX_REGISTRY_OFFSET)]
 
 
 def registry(request: Request) -> AgentRegistry:
