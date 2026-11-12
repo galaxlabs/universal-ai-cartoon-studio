@@ -3,9 +3,9 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
-from pathlib import Path
 import sqlite3
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT_DIR = ROOT / "storage" / "80_REPORTS"
@@ -27,17 +27,30 @@ def schema_probe() -> dict:
     backup_dir.mkdir(parents=True, exist_ok=True)
     database = temp_dir / "schema-probe.db"
     backup = backup_dir / "schema-probe-backup.db"
-    sidecars = (database, backup, Path(f"{database}-wal"), Path(f"{database}-shm"), Path(f"{backup}-wal"), Path(f"{backup}-shm"))
+    sidecars = (
+        database, backup, Path(f"{database}-wal"), Path(f"{database}-shm"),
+        Path(f"{backup}-wal"), Path(f"{backup}-shm"),
+    )
     for path in sidecars:
         path.unlink(missing_ok=True)
     con = sqlite3.connect(database)
     con.executescript(schema)
     journal_mode = con.execute("PRAGMA journal_mode").fetchone()[0]
-    tables = sorted(row[0] for row in con.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"))
-    now = dt.datetime.now(dt.timezone.utc).isoformat()
-    con.execute("INSERT INTO projects VALUES(?,?,?,?,?,?)", ("p1", "Foundation Probe", "DEVELOPMENT", str(ROOT), now, now))
-    con.execute("INSERT INTO production_jobs(id,project_id,job_type,status,workspace_path,requested_by,created_at) VALUES(?,?,?,?,?,?,?)", ("j1", "p1", "PROBE", "DRAFT", str(ROOT / "storage" / "10_DEVELOPMENT" / "j1"), "phase0-validator", now))
-    con.execute("INSERT INTO job_events(job_id,sequence,event_type,created_at) VALUES(?,?,?,?)", ("j1", 1, "CREATED", now))
+    tables = sorted(row[0] for row in con.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+    ))
+    now = dt.datetime.now(dt.UTC).isoformat()
+    con.execute(
+        "INSERT INTO projects VALUES(?,?,?,?,?,?)", ("p1", "Foundation Probe", "DEVELOPMENT", str(ROOT), now, now),
+    )
+    con.execute(
+        "INSERT INTO production_jobs(id,project_id,job_type,status,workspace_path,requested_by,created_at) "
+        "VALUES(?,?,?,?,?,?,?)",
+        ("j1", "p1", "PROBE", "DRAFT", str(ROOT / "storage" / "10_DEVELOPMENT" / "j1"), "phase0-validator", now),
+    )
+    con.execute(
+        "INSERT INTO job_events(job_id,sequence,event_type,created_at) VALUES(?,?,?,?)", ("j1", 1, "CREATED", now),
+    )
     con.commit()
     rollback_ok = False
     try:
@@ -63,8 +76,15 @@ def schema_probe() -> dict:
         except OSError:
             pass
     cleaned = not any(path.exists() for path in sidecars)
-    ok = len(tables) >= 23 and rollback_ok and foreign_keys and journal_mode.lower() == "wal" and restore_status == "DRAFT" and cleaned
-    return {"ok": ok, "table_count": len(tables), "tables": tables, "journal_mode": journal_mode, "transaction_rollback_ok": rollback_ok, "foreign_keys_enabled": foreign_keys, "backup_restore_status": restore_status, "test_artifacts_cleaned": cleaned}
+    ok = (
+        len(tables) >= 23 and rollback_ok and foreign_keys and journal_mode.lower() == "wal"
+        and restore_status == "DRAFT" and cleaned
+    )
+    return {
+        "ok": ok, "table_count": len(tables), "tables": tables, "journal_mode": journal_mode,
+        "transaction_rollback_ok": rollback_ok, "foreign_keys_enabled": foreign_keys,
+        "backup_restore_status": restore_status, "test_artifacts_cleaned": cleaned,
+    }
 
 
 def main() -> int:
@@ -79,7 +99,10 @@ def main() -> int:
     for item in protected["sources"]:
         path = Path(item["path"])
         actual = sha256(path) if path.is_file() and item.get("sha256") else None
-        protected_results.append({"id": item["id"], "exists": path.exists(), "hash_equal": actual == item.get("sha256") if actual else True, "actual_sha256": actual})
+        protected_results.append({
+            "id": item["id"], "exists": path.exists(),
+            "hash_equal": actual == item.get("sha256") if actual else True, "actual_sha256": actual,
+        })
     required_docs = [
         "README.md",
         "docs/MASTER_REQUIREMENTS.md",
@@ -90,7 +113,10 @@ def main() -> int:
         "docs/phase0/PHASE0_DISCOVERY_REPORT.md",
         "docs/phase0/PHASE0_ROLLBACK.md",
     ]
-    protected_zone_files = [p for p in (ROOT / paths["storage"]["protected_registry"]).rglob("*") if p.is_file() and p.name != ".gitkeep"]
+    protected_zone_files = [
+        p for p in (ROOT / paths["storage"]["protected_registry"]).rglob("*")
+        if p.is_file() and p.name != ".gitkeep"
+    ]
     checks = {
         "json_manifests_parse": True,
         "component_manifest_nonempty": len(components["components"]) >= 10,
@@ -116,7 +142,19 @@ def main() -> int:
     }
     json_path = REPORT_DIR / "phase0_foundation_validation.json"
     json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
-    md = "# Phase 0 Foundation Validation\n\n" + f"- Status: **{report['status']}**\n- SQLite schema tables: **{schema_result['table_count']}**\n- SQLite journal mode: **{schema_result['journal_mode'].upper()}**\n- Simulated transaction rollback: **{'PASS' if schema_result['transaction_rollback_ok'] else 'FAIL'}**\n- SQLite backup/restore: **{'PASS' if schema_result['backup_restore_status'] == 'DRAFT' else 'FAIL'}**\n- Test artifact cleanup: **{'PASS' if schema_result['test_artifacts_cleaned'] else 'FAIL'}**\n- Protected-source hashes: **{'PASS' if checks['protected_sources_unchanged'] else 'FAIL'}**\n- Public service binding: **disabled**\n- Third-party installations: **none**\n- External application configuration changes: **none**\n- Next gate: **Creative Director approval for Phase 1**\n"
+    md = "# Phase 0 Foundation Validation\n\n" + (
+        f"- Status: **{report['status']}**\n"
+        f"- SQLite schema tables: **{schema_result['table_count']}**\n"
+        f"- SQLite journal mode: **{schema_result['journal_mode'].upper()}**\n"
+        f"- Simulated transaction rollback: **{'PASS' if schema_result['transaction_rollback_ok'] else 'FAIL'}**\n"
+        f"- SQLite backup/restore: **{'PASS' if schema_result['backup_restore_status'] == 'DRAFT' else 'FAIL'}**\n"
+        f"- Test artifact cleanup: **{'PASS' if schema_result['test_artifacts_cleaned'] else 'FAIL'}**\n"
+        f"- Protected-source hashes: **{'PASS' if checks['protected_sources_unchanged'] else 'FAIL'}**\n"
+        f"- Public service binding: **disabled**\n"
+        f"- Third-party installations: **none**\n"
+        f"- External application configuration changes: **none**\n"
+        f"- Next gate: **Creative Director approval for Phase 1**\n"
+    )
     (ROOT / "docs" / "phase0" / "PHASE0_TEST_REPORT.md").write_text(md, encoding="utf-8")
     print(json.dumps({"status": report["status"], "report": str(json_path), "checks": checks}, ensure_ascii=False))
     return 0 if report["status"] == "PASS" else 1

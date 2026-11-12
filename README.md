@@ -16,6 +16,15 @@ On a new Windows computer, install [uv](https://docs.astral.sh/uv/getting-starte
 
 Full dated implemented-versus-planned status: **`PROJECT_STATUS_UR.md`**.
 
+## Repository-wide lint
+
+```powershell
+uv run --frozen python -m ruff check src tests scripts migrations --statistics
+```
+
+CI uses this same full scope, including historical Phase 0 and operations helpers.
+The older phase-specific verification commands below remain historical subsets.
+
 ## Safety boundary
 
 - Canonical project root: `D:\Projects\06_Studio_Systems\Universal_AI_Cartoon_Studio`

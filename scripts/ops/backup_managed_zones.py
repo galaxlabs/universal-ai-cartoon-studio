@@ -13,7 +13,7 @@ import json
 import shutil
 import sqlite3
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,7 +31,7 @@ def sha256(path: Path) -> str:
 
 
 def main() -> int:
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    stamp = datetime.now(UTC).strftime("%Y%m%d-%H%M%S")
     target = ROOT / "storage" / "60_BACKUPS" / "managed" / stamp
     if target.exists():
         print(f"refusing to reuse existing backup folder: {target}")
@@ -65,7 +65,7 @@ def main() -> int:
             entries.append({"path": f"zones/{relative.as_posix()}", "sha256": sha256(destination),
                             "bytes": destination.stat().st_size, "source": relative.as_posix()})
 
-    manifest = {"created_at": datetime.now(timezone.utc).isoformat(), "backup_folder": str(target),
+    manifest = {"created_at": datetime.now(UTC).isoformat(), "backup_folder": str(target),
                 "file_count": len(entries), "files": entries}
     (target / "backup_manifest.json").write_text(json.dumps(manifest, indent=2, ensure_ascii=False),
                                                  encoding="utf-8")

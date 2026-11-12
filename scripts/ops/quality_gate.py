@@ -29,8 +29,11 @@ def main() -> int:
             print(f"{name}: SKIPPED ({command[0]} not found)")
             continue
         try:
-            result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, check=False,
-                                    timeout=STEP_TIMEOUT_SECONDS)
+            # STEPS is module-owned argv, not populated from API/CLI request input.
+            result = subprocess.run(  # noqa: S603 -- fixed STEPS argv; explicit shell=False, no user interpolation
+                command, cwd=ROOT, capture_output=True, text=True, check=False,
+                timeout=STEP_TIMEOUT_SECONDS, shell=False,
+            )
         except subprocess.TimeoutExpired:
             failed = True
             print(f"{name}: FAIL (timed out after {STEP_TIMEOUT_SECONDS}s; a tool may be waiting on network)")
