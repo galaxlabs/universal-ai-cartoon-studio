@@ -10,6 +10,8 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from studio_manager import __version__
+from studio_manager.agent_api import router as agent_router
+from studio_manager.agent_registry import AgentRegistry
 from studio_manager.api import router as api_router
 from studio_manager.api_v1 import router as api_v1_router
 from studio_manager.backup_service import BackupService
@@ -19,6 +21,7 @@ from studio_manager.import_service import Phase02ImportService
 from studio_manager.mcp_gateway import MCPGateway
 from studio_manager.mcp_manager import MCPManager
 from studio_manager.phase03a_service import Phase03AService
+from studio_manager.registry_boundary import REGISTRY_MAX_BODY_BYTES, RegistryRequestBoundary
 from studio_manager.service import DomainError, StudioService
 from studio_manager.storage_service import LocalStorageService
 from studio_manager.ui import router as ui_router
@@ -46,6 +49,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         openapi_url=None,
         lifespan=lifespan,
     )
+    # Existing intent/security middleware and TrustedHost stay outside this
+    # pure-ASGI boundary; it runs before FastAPI can buffer or parse a body.
+    app.add_middleware(RegistryRequestBoundary, max_body_bytes=REGISTRY_MAX_BODY_BYTES)
     allowed_hosts = [active.host, "localhost"]
     if active.test_mode:
         allowed_hosts.append("testserver")
@@ -54,6 +60,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.settings = active
     app.state.engine = engine
     app.state.service = StudioService(engine)
+    app.state.agent_registry = AgentRegistry(engine)
     app.state.phase03a = Phase03AService(engine)
     app.state.phase03a_importer = Phase02ImportService(
         engine,
@@ -69,6 +76,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.state.mcp_gateway = MCPGateway(engine)
     app.include_router(api_router)
     app.include_router(api_v1_router)
+    app.include_router(agent_router)
     app.include_router(ui_router)
 
     @app.exception_handler(DomainError)

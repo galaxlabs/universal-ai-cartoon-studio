@@ -11,8 +11,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --frozen
-      - name: Lint application and maintained foundation/launcher scripts
-        run: uv run --frozen ruff check src tests migrations scripts/launch_studio.py scripts/run_local.py scripts/run_worker.py scripts/phase1a scripts/phase1b/vendor_htmx.py scripts/phase1b/backup_database.py scripts/phase1b/validate_phase1b.py scripts/phase02/validate_phase02.py scripts/phase03a
+      - name: Lint complete repository
+        run: uv run --frozen python -m ruff check src tests scripts migrations --statistics
       - name: Portable tests (external protected production files are not in GitHub)
         run: uv run --frozen pytest -W error --ignore=tests/test_protected_sources.py --cov=studio_manager --cov-report=term-missing
       - name: Check command-free launcher runtime

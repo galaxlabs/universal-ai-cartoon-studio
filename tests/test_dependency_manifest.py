@@ -11,7 +11,8 @@ def test_direct_application_dependencies_are_declared_and_locked() -> None:
     manifest = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     lock = tomllib.loads((ROOT / "uv.lock").read_text(encoding="utf-8"))
     direct = {re.split(r"[<>=!~\[; ]", requirement)[0] for requirement in manifest["project"]["dependencies"]}
-    required = {"alembic", "fastapi", "jinja2", "pydantic", "python-multipart", "sqlalchemy", "starlette", "uvicorn"}
+    required = {"alembic", "fastapi", "jinja2", "jsonschema", "pydantic", "python-multipart",
+                "sqlalchemy", "starlette", "uvicorn"}
     assert required <= direct
     locked = {package["name"] for package in lock["package"]}
     assert direct <= locked

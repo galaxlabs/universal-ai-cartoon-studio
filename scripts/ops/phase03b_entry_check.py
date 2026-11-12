@@ -10,7 +10,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -74,7 +74,7 @@ def main() -> int:
         "protected_source_hashes": check_protected_sources(),
     }
     technical_ready = all(c["pass"] for c in checks.values())
-    report = {"generated_at": datetime.now(timezone.utc).isoformat(), "checks": checks,
+    report = {"generated_at": datetime.now(UTC).isoformat(), "checks": checks,
               "technical_entry_ready": technical_ready,
               "creative_director_approval": "REQUIRED_NOT_GRANTED_BY_THIS_SCRIPT"}
     REPORTS.mkdir(parents=True, exist_ok=True)

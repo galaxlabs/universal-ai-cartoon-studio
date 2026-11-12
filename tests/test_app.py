@@ -10,7 +10,7 @@ def test_health_is_local_and_database_is_ready(client: TestClient) -> None:
     assert payload["status"] == "ok"
     assert payload["bind_host"] == "127.0.0.1"
     assert payload["database"]["migration_rows"] == 1
-    assert payload["database"]["tables"] == 31
+    assert payload["database"]["tables"] == 35
     assert payload["database"]["pragmas"] == {
         "foreign_keys": 1,
         "journal_mode": "wal",

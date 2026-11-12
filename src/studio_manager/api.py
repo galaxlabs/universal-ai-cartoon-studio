@@ -4,6 +4,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, status
 
+from studio_manager.auth import require_api_token
 from studio_manager.contracts import (
     ApprovalCreate,
     AssetCreate,
@@ -44,6 +45,7 @@ def gateway(request: Request) -> MCPGateway:
 StudioDep = Annotated[StudioService, Depends(service)]
 MCPDep = Annotated[MCPManager, Depends(mcp)]
 GatewayDep = Annotated[MCPGateway, Depends(gateway)]
+ApprovalActor = Annotated[str, Depends(require_api_token)]
 
 
 @router.get("/studio")
@@ -110,8 +112,9 @@ def transition_job(
 
 
 @router.post("/approvals", status_code=status.HTTP_201_CREATED)
-def create_approval(payload: ApprovalCreate, studio: StudioDep) -> dict[str, object]:
-    return studio.create_approval(payload)
+def create_approval(payload: ApprovalCreate, studio: StudioDep, actor: ApprovalActor) -> dict[str, object]:
+    # Decision identity belongs to the authenticated principal, not the request.
+    return studio.create_approval(payload.model_copy(update={"decided_by": actor}))
 
 
 @router.get("/mcp/servers")

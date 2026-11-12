@@ -150,7 +150,7 @@ def test_job_transitions_are_atomic_and_approval_gated(client: TestClient) -> No
             "decided_by": "creative-director",
             "notes": "Foundation evidence accepted.",
         },
-        headers=HEADERS,
+        headers={**HEADERS, "Authorization": f"Bearer {client.app.state.settings.api_token}"},
     )
     assert approval.status_code == 201
     published = transition(client, str(job["id"]), "PUBLISHED")

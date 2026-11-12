@@ -11,7 +11,7 @@ import argparse
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -65,7 +65,7 @@ def main() -> int:
     if args.verify:
         return verify(args.verify)
     files = collect()
-    manifest = {"generated_at": datetime.now(timezone.utc).isoformat(), "zones": ZONES,
+    manifest = {"generated_at": datetime.now(UTC).isoformat(), "zones": ZONES,
                 "file_count": len(files), "files": files}
     DEFAULT_OUT.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {DEFAULT_OUT} files={len(files)}")

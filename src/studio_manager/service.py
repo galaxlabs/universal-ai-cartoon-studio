@@ -287,11 +287,54 @@ class StudioService:
 
         return self._write(operation)
 
-    def _transition_job(self, connection: Connection, job_id: str, payload: JobTransition) -> dict[str, object]:
+    @staticmethod
+    def _approved_job_evidence(connection: Connection, job_id: str, references: list[object]) -> dict[str, object]:
+        # Latest decision for this exact job, not any historical APPROVED row or
+        # caller-supplied decision/actor. Existing DECIDE audit authenticates the
+        # stored decision's provenance without introducing another registry.
+        record = connection.execute(
+            text("SELECT * FROM approvals WHERE subject_kind='JOB' AND subject_id=:id ORDER BY rowid DESC LIMIT 1"),
+            {"id": job_id},
+        ).mappings().first()
+        if record is None or record["decision"] != "APPROVED" or not str(record["decided_by"]).strip():
+            raise DomainError("a valid APPROVED decision for this job is required", 409)
+        approval = dict(record)
+        if any(reference is not None and reference != approval["id"] for reference in references):
+            raise DomainError("approval reference does not match this job's current approved decision", 409)
+        audit = connection.execute(
+            text("SELECT actor,after_json FROM audit_events WHERE action='DECIDE' "
+                 "AND subject_kind='JOB' AND subject_id=:id ORDER BY id DESC LIMIT 1"),
+            {"id": job_id},
+        ).mappings().first()
+        try:
+            audited = json.loads(audit["after_json"]) if audit else None
+        except (TypeError, ValueError):
+            audited = None
+        if audit is None or audit["actor"] != approval["decided_by"] or audited != approval:
+            raise DomainError("job approval is missing consistent decision audit evidence", 409)
+        return approval
+
+    def _transition_job(
+        self, connection: Connection, job_id: str, payload: JobTransition,
+        *, workflow_approval_id: str | None = None,
+    ) -> dict[str, object]:
+        # Only create_approval supplies this private context after inserting and
+        # auditing the actual decision in the same transaction. Public payload
+        # approval_id cannot grant entry to the approval workflow.
         before = self._row(connection, "production_jobs", job_id)
+        if payload.target_status == "APPROVED" and workflow_approval_id is None:
+            raise DomainError("use the trusted approval workflow to approve a job", 409)
         current = str(before["status"])
         if payload.target_status not in JOB_TRANSITIONS.get(current, set()):
             raise DomainError(f"invalid job transition: {current} -> {payload.target_status}", 409)
+        approval = None
+        event_payload = dict(payload.payload)
+        if payload.target_status in {"APPROVED", "PUBLISHED"}:
+            references = [workflow_approval_id, payload.approval_id]
+            if "approval_id" in event_payload:
+                references.append(event_payload["approval_id"])
+            approval = self._approved_job_evidence(connection, job_id, references)
+            event_payload.update(approval_id=approval["id"], decision=approval["decision"])
         sequence = connection.execute(
             text("SELECT COALESCE(MAX(sequence),0)+1 FROM job_events WHERE job_id=:id"), {"id": job_id}
         ).scalar_one()
@@ -300,18 +343,22 @@ class StudioService:
             timestamps["started"] = now_iso()
         if payload.target_status in {"PUBLISHED", "FAILED", "CANCELLED", "ROLLED_BACK"}:
             timestamps["finished"] = now_iso()
-        connection.execute(
+        updated = connection.execute(
             text(
                 "UPDATE production_jobs SET status=:status, "
-                "started_at=COALESCE(:started,started_at), finished_at=COALESCE(:finished,finished_at) WHERE id=:id"
+                "started_at=COALESCE(:started,started_at), finished_at=COALESCE(:finished,finished_at) "
+                "WHERE id=:id AND status=:current"
             ),
             {
                 "status": payload.target_status,
                 "started": timestamps["started"],
                 "finished": timestamps["finished"],
                 "id": job_id,
+                "current": current,
             },
         )
+        if updated.rowcount != 1:
+            raise DomainError("job state changed during transition; retry from its current state", 409)
         connection.execute(
             text(
                 "INSERT INTO job_events(job_id,sequence,event_type,payload_json,created_at) "
@@ -321,12 +368,13 @@ class StudioService:
                 "id": job_id,
                 "sequence": sequence,
                 "event": f"STATUS_{payload.target_status}",
-                "payload": json.dumps(payload.payload, sort_keys=True),
+                "payload": json.dumps(event_payload, sort_keys=True),
                 "created": now_iso(),
             },
         )
         after = self._row(connection, "production_jobs", job_id)
-        self._audit(connection, payload.actor, "TRANSITION", "JOB", job_id, before, after)
+        audited_after = {**after, "approval_id": approval["id"]} if approval else after
+        self._audit(connection, payload.actor, "TRANSITION", "JOB", job_id, before, audited_after)
         return after
 
     def transition_job(self, job_id: str, payload: JobTransition) -> dict[str, object]:
@@ -350,16 +398,8 @@ class StudioService:
                 assert subject is not None
                 if subject["status"] != "PENDING_APPROVAL":
                     raise DomainError("job approvals require PENDING_APPROVAL status", 409)
-                target = "APPROVED" if payload.decision == "APPROVED" else "BLOCKED"
-                self._transition_job(
-                    connection,
-                    payload.subject_id,
-                    JobTransition(
-                        target_status=target,
-                        actor=payload.decided_by,
-                        payload={"decision": payload.decision},
-                    ),
-                )
+                if not payload.decided_by.strip():
+                    raise DomainError("job approval requires an identified decision-maker", 409)
             if payload.subject_kind == "ASSET_VERSION":
                 assert subject is not None
                 if subject["status"] != "PENDING_APPROVAL":
@@ -394,6 +434,15 @@ class StudioService:
             )
             row = self._row(connection, "approvals", item_id)
             self._audit(connection, payload.decided_by, "DECIDE", payload.subject_kind, payload.subject_id, None, row)
+            if payload.subject_kind == "JOB":
+                self._transition_job(
+                    connection, payload.subject_id,
+                    JobTransition(
+                        target_status="APPROVED" if payload.decision == "APPROVED" else "BLOCKED",
+                        actor=payload.decided_by, payload={"decision": payload.decision}, approval_id=item_id,
+                    ),
+                    workflow_approval_id=item_id,
+                )
             return row
 
         return self._write(operation)
