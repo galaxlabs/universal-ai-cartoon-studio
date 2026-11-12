@@ -20,11 +20,21 @@ def bounded_json(value: dict, *, schema: bool = False) -> None:
     if len(encoded.encode("utf-8")) > 16384:
         raise ValueError("metadata must not exceed 16 KiB")
 
+    def valid_unicode(text: str) -> None:
+        # json.dumps escapes surrogates by default, masking strings that later
+        # fail UTF-8 response serialization. Validate actual scalars unchanged.
+        try:
+            text.encode("utf-8")
+        except UnicodeEncodeError as exc:
+            raise ValueError("metadata contains invalid Unicode scalar values") from exc
+
     def walk(node: object, depth: int = 0) -> None:
         if depth > 12:
             raise ValueError("metadata nesting must not exceed 12 levels")
         if isinstance(node, dict):
             for key, child in node.items():
+                if isinstance(key, str):
+                    valid_unicode(key)
                 if schema and key in {"$ref", "$dynamicRef"} and (
                     not isinstance(child, str) or not child.startswith("#")
                 ):
@@ -33,6 +43,8 @@ def bounded_json(value: dict, *, schema: bool = False) -> None:
         elif isinstance(node, list):
             for child in node:
                 walk(child, depth + 1)
+        elif isinstance(node, str):
+            valid_unicode(node)
 
     walk(value)
     if schema:
