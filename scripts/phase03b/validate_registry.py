@@ -23,10 +23,10 @@ def validate(path: Path) -> dict:
     registry_tables = {"studio_agents", "studio_skills", "studio_agent_versions", "studio_skill_versions"}
     required_triggers = {
         f"prevent_{table}_{action}" for table in ("studio_agent_versions", "studio_skill_versions")
-        for action in ("update", "delete")
+        for action in ("insert", "update", "delete")
     }
     checks = {
-        "head": revision == "0005_agent_skills_registry",
+        "head": revision == "0006_registry_snapshot_guards",
         "integrity": integrity == "ok",
         "foreign_keys": not foreign_keys,
         "registry_tables": registry_tables <= tables and len(tables) == 35,

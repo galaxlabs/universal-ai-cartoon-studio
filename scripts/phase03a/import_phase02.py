@@ -59,7 +59,7 @@ def main() -> int:
         connection.close()
         engine.dispose()
     status = "PASS" if integrity == "ok" and revision in {
-        "0004_phase03a_foundation", "0005_agent_skills_registry",
+        "0004_phase03a_foundation", "0005_agent_skills_registry", "0006_registry_snapshot_guards",
     } else "FAIL"
     report = {
         "generated_at": datetime.now(UTC).isoformat(),

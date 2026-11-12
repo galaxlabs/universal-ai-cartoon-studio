@@ -277,7 +277,7 @@ def test_phase02_report_import_and_database_backup_recovery(
     assert backup.status_code == 201, backup.text
     details = backup.json()
     assert details["integrity_check"] == "ok"
-    assert details["migration_revision"] == "0005_agent_skills_registry"
+    assert details["migration_revision"] == "0006_registry_snapshot_guards"
     assert details["restore_open_test"] is True
     backup_path = Path(details["path"])
     assert backup_path.is_file()
